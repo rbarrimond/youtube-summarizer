@@ -1,0 +1,24 @@
+---
+title: "..."
+source_type: "youtube_podcast"      # you can tweak per use case
+original_url: "https://www.youtube.com/watch?v=..."
+
+created: "2025-11-20"               # when YOU generated this note
+source_date: "2025-11-19"           # from yt-dlp upload_date where possible
+
+duration_seconds: 7210
+language: "en"
+
+people: []                          # (you can fill manually for now)
+topics: []                          # (optionally map from tags later)
+
+tags:
+  - "YouTube"
+  # + whatever else you want script to add later
+
+description: >
+  First line of the YT description, truncated to ~280 chars.
+
+transcript_source: "yt-dlp"
+transcript_quality: "auto"          # or 'none' if no subs
+---

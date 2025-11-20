@@ -1,0 +1,83 @@
+###############################################
+# Python build / bytecode artifacts
+###############################################
+__pycache__/
+*.py[cod]
+*$py.class
+
+###############################################
+# Virtual environments
+###############################################
+.env
+.venv/
+venv/
+env/
+
+###############################################
+# Distribution / packaging
+###############################################
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.egg
+
+###############################################
+# Caches / tooling
+###############################################
+.cache/
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+.ruff_cache/
+.pylint.d/
+.pyre/
+dmypy.json
+
+###############################################
+# Coverage
+###############################################
+.coverage*
+coverage.xml
+htmlcov/
+
+###############################################
+# Logs
+###############################################
+*.log
+
+###############################################
+# Editor / OS clutter
+###############################################
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+###############################################
+# Environment / version managers
+###############################################
+.python-version
+
+###############################################
+# Project-specific generated artifacts
+# (Keep markdown notes; ignore raw subtitle & temp inputs)
+###############################################
+*.srt
+*.vtt
+fabric_input_*.txt
+
+# Uncomment if you do NOT want generated notes tracked:
+# *.md
+
+###############################################
+# Secrets / keys (adjust as needed)
+###############################################
+*.pem
+*.key
+*.secret
+.env.*
+
+# End of .gitignore
