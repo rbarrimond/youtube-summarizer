@@ -179,7 +179,7 @@ def main() -> None:
     # give the pattern the title and the full transcript.
     fabric_input = f"INPUT:\n\n{title}\n\n{transcript_text}"
     body_md = run(
-        ["fabric", "--pattern", "extract_article_wisdom"],
+        ["fabric-ai", "--pattern", "extract_article_wisdom"],
         input_text=fabric_input,
     )
 
