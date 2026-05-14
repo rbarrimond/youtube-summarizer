@@ -21,32 +21,38 @@ from typing import Any
 from yt_dlp import YoutubeDL
 
 
-def clean_srt_to_text(srt_path: Path) -> str:
+def clean_subtitle_to_text(sub_path: Path) -> str:
     """
-    Convert SRT file to clean linear text:
+    Convert SRT or VTT file to clean linear text:
     - Remove HTML tags
     - Remove cue numbers
     - Remove timestamps
+    - Remove WEBVTT headers
     - Collapse whitespace
     """
+
     text_lines = []
 
-    timestamp_pattern = re.compile(r"\d{2}:\d{2}:\d{2},\d{3}")
+    timestamp_pattern = re.compile(r"\d{2}:\d{2}:\d{2}[.,]\d{3}")
     cue_number_pattern = re.compile(r"^\d+$")
     html_tag_pattern = re.compile(r"<[^>]+>")
 
-    with srt_path.open("r", encoding="utf-8") as f:
+    with sub_path.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
 
             if not line:
                 continue
 
-            # Remove cue numbers
+            # Skip WEBVTT header
+            if line.upper().startswith("WEBVTT"):
+                continue
+
+            # Skip cue numbers
             if cue_number_pattern.match(line):
                 continue
 
-            # Remove timestamp lines
+            # Skip timestamps (handles both , and . milliseconds)
             if timestamp_pattern.search(line):
                 continue
 
@@ -55,10 +61,7 @@ def clean_srt_to_text(srt_path: Path) -> str:
 
             text_lines.append(line)
 
-    # Merge lines into flowing text
     cleaned = " ".join(text_lines)
-
-    # Normalize whitespace
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
 
     return cleaned
@@ -88,21 +91,21 @@ def download_and_process(url: str):
     # Sanitize title for filesystem safety
     safe_title = re.sub(r"[^\w\-. ]", "_", title).strip()
 
-    # Find the actual English SRT file that was downloaded
-    srt_files = list(Path(".").glob("*.en.srt"))
+    # Find English subtitle files (.srt or .vtt)
+    subtitle_files = list(Path(".").glob("*.en.srt")) + list(Path(".").glob("*.en.vtt"))
 
-    if not srt_files:
-        raise FileNotFoundError("No English SRT subtitle file found.")
+    if not subtitle_files:
+        raise FileNotFoundError("No English subtitle file (.srt or .vtt) found.")
 
-    # If multiple, choose the most recently modified
-    srt_path = max(srt_files, key=lambda p: p.stat().st_mtime)
+    # Choose most recently modified subtitle file
+    sub_path = max(subtitle_files, key=lambda p: p.stat().st_mtime)
 
-    cleaned_text = clean_srt_to_text(srt_path)
+    cleaned_text = clean_subtitle_to_text(sub_path)
 
     txt_path = Path(f"{safe_title}.txt")
     txt_path.write_text(cleaned_text, encoding="utf-8")
 
-    print(f"\n✓ Detected subtitle file: {srt_path}")
+    print(f"\n✓ Detected subtitle file: {sub_path}")
     print(f"✓ Saved pure text transcript: {txt_path}")
 
 
@@ -112,3 +115,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     download_and_process(sys.argv[1])
+    
